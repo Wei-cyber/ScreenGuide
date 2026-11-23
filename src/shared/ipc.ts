@@ -1,0 +1,18 @@
+export const IPC = {
+  listSources: "sources:list",
+  setReady: "session:ready",
+  start: "session:start",
+  pause: "session:pause",
+  resume: "session:resume",
+  focusSource: "session:focus-source",
+  stop: "session:stop",
+  snapshot: "session:snapshot",
+  audioInput: "session:audio-input",
+  userText: "session:user-text",
+  audioPlayback: "session:audio-playback",
+  snapshotEvent: "event:snapshot",
+  transcriptEvent: "event:transcript",
+  audioEvent: "event:audio",
+  guidanceEvent: "event:guidance",
+  coachStatusEvent: "event:coach-status",
+} as const;

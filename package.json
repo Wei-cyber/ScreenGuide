@@ -1,0 +1,68 @@
+{
+  "name": "screenguide",
+  "version": "0.3.1",
+  "private": true,
+  "description": "A privacy-first AI screen coach for Windows",
+  "main": "dist-main/main/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"vite --configLoader runner --host 127.0.0.1\" \"tsc -p tsconfig.node.json --watch\" \"wait-on tcp:5173 dist-main/main/main.js && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
+    "web:dev": "concurrently -k \"node --env-file-if-exists=.env web/server/local.mjs\" \"vite --config web/vite.config.ts --configLoader runner --host 127.0.0.1\"",
+    "web:build": "vite build --config web/vite.config.ts --configLoader runner",
+    "web:typecheck": "tsc -p web/tsconfig.json --noEmit",
+    "ensure:electron": "node node_modules/electron/install.js",
+    "postinstall": "npm run ensure:electron",
+    "clean": "node -e \"const fs=require('fs'); for (const p of ['dist','dist-main']) fs.rmSync(p,{recursive:true,force:true})\"",
+    "build": "npm run typecheck && npm run clean && vite build --configLoader runner && tsc -p tsconfig.node.json",
+    "typecheck": "tsc -p tsconfig.web.json --noEmit && tsc -p tsconfig.node.json --noEmit && npm run web:typecheck",
+    "test": "vitest run --configLoader runner",
+    "test:watch": "vitest --configLoader runner",
+    "dist": "npm run ensure:electron && npm run build && electron-builder --win nsis"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "ws": "^8.21.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "@types/ws": "^8.18.1",
+    "@vitejs/plugin-react": "^4.7.0",
+    "concurrently": "^9.2.0",
+    "cross-env": "^10.0.0",
+    "electron": "^43.2.0",
+    "electron-builder": "26.15.3",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.6",
+    "vitest": "^3.2.4",
+    "wait-on": "^8.0.4"
+  },
+  "build": {
+    "appId": "com.screenguide.desktop",
+    "productName": "ScreenGuide",
+    "electronDist": "node_modules/electron/dist",
+    "artifactName": "ScreenGuide-Setup-${version}.${ext}",
+    "asar": true,
+    "files": [
+      "dist/**/*",
+      "dist-main/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

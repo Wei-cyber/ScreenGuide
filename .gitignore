@@ -1,0 +1,14 @@
+node_modules/
+dist/
+dist-main/
+web-dist/
+release/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+outputs/
+work/
+.agents/
+.codex/
